@@ -1,0 +1,8 @@
+FROM python:3.9-slim
+LABEL Author="Kevin Buffardi"
+LABEL version="0.1"
+LABEL name="codewitus-python"
+WORKDIR /sandbox
+COPY client.py .
+
+CMD ["python", "client.py"]
