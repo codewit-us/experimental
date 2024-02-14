@@ -1,0 +1,9 @@
+FROM alpine:3
+LABEL Author="Kevin Buffardi"
+LABEL version="0.1"
+LABEL name="codewitus-cpp"
+RUN apk update && apk add --no-cache g++
+WORKDIR /sandbox
+COPY client.cpp .
+RUN g++ -o client client.cpp
+ENTRYPOINT ["./client"]
