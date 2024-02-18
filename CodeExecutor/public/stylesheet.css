@@ -1,0 +1,19 @@
+html,body{
+    color:green;
+}
+.main{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+.main-code-form{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+.main-textarea{
+    height:300px;
+    width:300px;
+}
