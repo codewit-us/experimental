@@ -1,11 +1,10 @@
 import express,{Express,Request,Response} from 'express'
 import bodyParser from 'body-parser'
-import path from 'path'
 import fs from 'fs'
 import {promisify} from 'util';
 import { exec } from 'child_process';
 
-const PORT:Number=3001
+const PORT:Number=3002
 const app:Express=express() 
 const writeAsync=promisify(fs.writeFile)
 
@@ -19,11 +18,11 @@ app.get('/',(req:Request,res:Response)=>{
 
 app.post('/code',async (req: Request, res:Response)=>{
     try{
-        const code=req.body.codeText
-        const filepath='code_files/code.py'
+        const code: string=req.body.codeText
+        const filepath: string='code_files/code.py'
         await writeAsync(filepath,code)
         const command = 'docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py codewitus-python';
-        exec(command, (error, stdout, stderr) => {
+        exec(command, (error:Error | null, stdout:string, stderr:string) => {
             if (error) {
                 console.error(`Error executing command: ${error}`);
                 res.status(500).send('Error executing command');
@@ -35,12 +34,12 @@ app.post('/code',async (req: Request, res:Response)=>{
                 res.status(500).send('Error executing command');
                 return;
             }
-    
-            // Command executed successfully, stdout contains the output
             console.log(`Command stdout: ${stdout}`);
-            res.send(stdout); // Send the output as response
+            res.render('index', { code:stdout} ); 
         });
+
     } catch(e){
+    
         console.log(e)
         res.send('Error 500 - Failure to write code to a file')
     }
