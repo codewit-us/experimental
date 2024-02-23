@@ -12,10 +12,16 @@
         <div class="main">
             <h1> Welcome </h1>
             <form action='/code' method="POST" class="main-code-form">
-                <textarea name="codeText" class="main-textarea" placeholder="code away..."></textarea>
+                <textarea name="codeText" class="main-textarea" placeholder="code away..."><%= typeof inputData!=='undefined'? inputData:'' %></textarea>
                 <br>
                 <button type="submit">submit code</button>
             </form>
-       </div>
+            <div class="main-output">
+                <% if (typeof code !== 'undefined') { %>
+                 <h3> <%= code %> </h3>
+                  <% } %>        
+               </div>
+            </div>
+      
     </body>
 </html>
