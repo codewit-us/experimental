@@ -2,7 +2,7 @@ import express,{Express,Request,Response} from 'express'
 import bodyParser from 'body-parser'
 import fs from 'fs'
 import {promisify} from 'util';
-import { exec } from 'child_process';
+import {exec} from 'child_process';
 
 const PORT:Number=3003
 const app:Express=express() 
@@ -21,15 +21,10 @@ app.post('/code',async (req: Request, res:Response)=>{
         const code: string=req.body.codeText
         const filepath: string='code_files/code.py'
         await writeAsync(filepath,code)
-        const command = 'docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py codewitus-python';
+        const command = 'docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py codewitus-python 2>&1';
         exec(command, (error:Error | null, stdout:string, stderr:string) => {
             if (error) {
                 console.error(`Error executing command: ${error}`);
-                res.status(500).send('Error executing command');
-                return;
-            }
-            if (stderr) {
-                console.error(`Command stderr: ${stderr}`);
                 res.status(500).send('Error executing command');
                 return;
             }
