@@ -16,27 +16,73 @@ app.get('/',(req:Request,res:Response)=>{
     res.render('index')
 })
 
-app.post('/code',async (req: Request, res:Response)=>{
-    try{
-        const code: string=req.body.codeText
-        const filepath: string='code_files/code.py'
-        await writeAsync(filepath,code)
-        const command = 'docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py codewitus-python 2>&1';
-        exec(command, (error:Error | null, stdout:string, stderr:string) => {
-            if (error) {
-                console.error(`Error executing command: ${error}`);
-                res.status(500).send('Error executing command');
-                return;
+const timeLimit = function(fn: (...args: any[]) => Promise<any>) {
+    return async function(...args: any[]) {
+        return new Promise(async (resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject("Time Limit Exceeded");
+            }, 5000);
+            
+            try {
+                const res = await fn(...args);
+                clearTimeout(timeout);
+                resolve(res);
+            } catch (e) {
+                clearTimeout(timeout);
+                reject(e);
             }
-            console.log(`Command stdout: ${stdout}`);
-            res.render('index', { code:stdout} ); 
+        });
+    };
+};
+
+app.post('/code', async (req: Request, res: Response) => {
+    try {
+        const code: string = req.body.codeText;
+        const filepath: string = 'code_files/code.py';
+        
+        // Write the code to a file within the Docker container
+        await writeAsync(filepath, code);
+
+        // Execute the code within the Docker container with a time limit
+        const timeLimitedExec = timeLimit((command: string) => {
+            return new Promise((resolve, reject) => {
+                exec(command, (error: Error | null, stdout: string, stderr: string) => {
+                    if (stdout.includes('SyntaxError')) {
+                        // Handle compilation error based on stdout content
+                        console.error(`Compilation error: ${stdout}`);
+                        stdout = 'Compilation failed: ' + stdout;
+                        resolve(stdout);
+                        return;
+                    }
+
+                    if (error) {
+                        console.error(`Error executing command: ${error}`);
+                        reject('Error executing command');
+                        return;
+                    }
+                    
+                    console.log(`Command stdout: ${stdout}`);
+                    resolve(stdout);
+                });
+            });
         });
 
-    } catch(e){
-        console.log(e)
-        res.send('Error 500 - Failure to write code to a file')
-    }  
-})
+        const command = `docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py codewitus-python 2>&1`;
+        const stdout = await timeLimitedExec(command);
+
+        // Render the output to the frontend
+        res.render('index', { code: stdout });
+    } catch (e) {
+        if (e=='Time Limit Exceeded'){
+            res.render('index',{code:'Time Limit Exceeded'})
+        }
+        else{
+            console.error(e);
+            res.status(500).send('Error 500 - Failure');
+        }
+    }
+});
+
 app.listen(PORT,()=>{
     console.log('Working correctly')
 })

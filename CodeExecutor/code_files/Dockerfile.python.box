@@ -7,4 +7,5 @@ WORKDIR /usr/src
 COPY code.py .
 COPY testfile.py .
 RUN pip install unittest-xml-reporting
+RUN python -m py_compile code.py
 CMD ["python", "testfile.py"]
