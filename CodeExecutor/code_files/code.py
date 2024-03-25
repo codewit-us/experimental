@@ -1,10 +1,12 @@
-def add(num1: int, num2: int) -> int:
-	"""Add two numbers"""
-	num3 = num1 + num2
+class GradeBook:
+   def __init__(self):
+       self.grades=[]
 
-	return num3
-
-# Driver code
-num1, num2 = 5, 15
-ans = add(num1, num2)
-print(f"The addition of {num1} and {num2} results {ans}.")
+   def get_average(self):
+       if not self.grades:
+           return 0
+   
+       return sum(self.grades)/float(len(self.grades))
+  
+   def add_grade(self,grade):
+       self.grades.append(grade)
