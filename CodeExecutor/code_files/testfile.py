@@ -17,8 +17,7 @@ class TestGradeBook(unittest.TestCase):
         self.assertEqual(self.gradebook.get_average(), 0)
 
 if __name__ == '__main__':
-    unittest.main(
-        testRunner=xmlrunner.XMLTestRunner(output='./test-reports'),
-        # these make sure that some options that are not applicable
-        # remain hidden from the help menu.
-        )
+    with open('./test-reports/output.xml', 'wb') as output:
+        unittest.main(
+            testRunner=xmlrunner.XMLTestRunner(output=output),
+            failfast=False, buffer=False, catchbreak=False)

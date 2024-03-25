@@ -17,9 +17,36 @@
                 <button type="submit">submit code</button>
             </form>
             <div class="main-output">
-                <% if (typeof code !== 'undefined') { %>
-                 <h3> <%= code %> </h3>
-                  <% } %>        
+               
+
+                <% if (code && code.testsuites && code.testsuites.testsuite) { %>
+                    <ul>
+                        <% const testSuites = Array.isArray(code.testsuites.testsuite) ? code.testsuites.testsuite : [code.testsuites.testsuite]; %>
+                        <% testSuites.forEach(suite => { %>
+                            <li><%= suite._attributes.name %></li>
+                            <ul>
+                                <% const testCases = Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase]; %>
+                                <% testCases.forEach(testCase => { %>
+                                    <li>
+                                        <%= testCase._attributes.name %> - <%= testCase._attributes.time %> seconds
+                                        <% if (testCase.failure) { %>
+                                            <div class="failure">
+                                                <p>Test failed: <%= testCase.failure._cdata.trim() %></p>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="success">
+                                                <p>Test passed successfully.</p>
+                                            </div>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <p><%= code %></p>
+                <% } %>
+                
                </div>
             </div>
       
