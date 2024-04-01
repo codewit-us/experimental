@@ -1,12 +1,1 @@
-<<<<<<< HEAD
 
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-	<testsuite name="TestGradeBook-20240325054507" tests="3" file=".py" time="0.010" timestamp="2024-03-25T05:45:07" failures="0" errors="0" skipped="0">
-		<testcase classname="TestGradeBook" name="test_add_grade" time="0.009" timestamp="2024-03-25T05:45:07" file="testfile.py" line="11"/>
-		<testcase classname="TestGradeBook" name="test_empty_gradebook_average" time="0.000" timestamp="2024-03-25T05:45:07" file="testfile.py" line="16"/>
-		<testcase classname="TestGradeBook" name="test_initial_average" time="0.000" timestamp="2024-03-25T05:45:07" file="testfile.py" line="8"/>
-	</testsuite>
-</testsuites>
->>>>>>> main
