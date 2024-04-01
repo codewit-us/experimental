@@ -1,7 +1,7 @@
 FROM python:3.9-slim
 LABEL Author="Kevin Buffardi"
 LABEL version="0.1"
-LABEL name="codewitus-python"
+LABEL name="codewitus-python" 
 WORKDIR /usr/src
 COPY code.py .
 COPY testfile.py .
