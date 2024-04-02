@@ -1,3 +1,9 @@
+/**
+ * Express application to handle code execution requests.
+ * Provides endpoints to execute code within a Docker container and render the output to the frontend.
+ * Supports handling time-limited executions and compilation failures.
+ */
+
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import fs from 'fs';
@@ -7,25 +13,39 @@ import { xml2js } from 'xml-js';
 import { truncate } from 'fs/promises';
 
 const PORT: number = 3003;
+
+// Initialize Express application
 const app: Express = express();
+
+// Promisify file system functions
 const writeAsync = promisify(fs.writeFile);
 const readAsync = promisify(fs.readFile);
 
+// Middleware setup
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.set('view engine', 'ejs');
+
+/**
+ * Middleware function to handle HTTP GET requests to the root endpoint ('/').
+ * Renders the index view with an empty code snippet.
+ * @param req - Express request object
+ * @param res - Express response object
+ */
 app.get('/', (req: Request, res: Response) => {
     res.render('index', { code: "" });
 });
 
-
-
+/**
+ * Function to limit execution time of a promise.
+ * @param fn - Function to be executed within a time limit
+ * @returns A promise that resolves or rejects based on the outcome of the provided function
+ */
 const timeLimit = function (fn: (...args: any[]) => Promise<any>) {
     return async function (...args: any[]) {
         return new Promise(async (resolve, reject) => {
             const timeout = setTimeout(() => {
-                reject("Time Limit Exceeded");
+                reject(new Error("Time Limit Exceeded"));
             }, 5000);
 
             try {
@@ -40,75 +60,68 @@ const timeLimit = function (fn: (...args: any[]) => Promise<any>) {
     };
 };
 
+/**
+ * HTTP POST endpoint to execute code.
+ * @param req - Express request object containing code to be executed
+ * @param res - Express response object to send back the execution result
+ */
 app.post('/code', async (req: Request, res: Response) => {
     try {
+        // Clear output.xml file before execution
         await truncate('code_files/test-reports/output.xml');
+        
+        // Get code from request body
         const code: string = req.body.codeText;
         const filepath: string = 'code_files/code.py';
 
         // Write the code to a file within the Docker container
         await writeAsync(filepath, code);
 
-        // Execute the code within the Docker container with a time limit
+        // Execute the code within the docker container with a time limit
         const timeLimitedExec = timeLimit((command: string) => {
             return new Promise((resolve, reject) => {
                 exec(command, async (error: Error | null, stdout: string, stderr: string) => {
-                    console.log("stderr:"+stderr)
-                    if (stderr.includes('SyntaxError') || stderr.includes('IndentationError')) {
-                        // Handle compilation error based on stdout content
-                        console.error(`Syntax Error: ${stderr}`);
-                        const message= 'Compilation failed: ' + stderr;
-                        resolve(message);
-                        return;
+
+                    if (stderr) { 
+                        // Both the correct output and compilation errors are available in stderr. Thus we check if output.xml is empty, If it is empty then it has to be a compilation error. 
+                        const xmlData = await readAsync('code_files/test-reports/output.xml', 'utf-8');
+                        if (!xmlData || xmlData.trim() === '') {
+                            reject(new Error('Compilation failed: ' + stderr));
+                            return;
+                        }
+                        const xmlObject = xml2js(xmlData, { compact: true });
+                        resolve(xmlObject);
+                        return
                     }
 
                     if (error) {
-                        console.error(`Error executing command: ${error}`);
-                        reject(`Error executing command ${error} `);
+                        reject(new Error(`Error executing command: ${error}`));
                         return;
                     }
-
-                    const readfilepath: string = 'code_files/test-reports/output.xml';
-                    const xmlData = await readAsync(readfilepath, 'utf-8');
-
-                    // Parse XML data to JavaScript object
-                    const xmlObject = xml2js(xmlData, { compact: true });
-
-                    if (!xmlObject || Object.keys(xmlObject).length === 0) {
-                        reject('Failure to execute testcases');
-                        return;
-                    }
-
-                    console.log(`Command stdout: ${stdout}`);
-                    resolve(xmlObject);
+                   
                 });
             });
         });
 
-        const command = `docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python &2>1`;
-        const stdout = await timeLimitedExec(command);
+        // Docker command to run the code
+        const command = `docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python`;
+        const result = await timeLimitedExec(command);
 
         // Render the output to the frontend
-        res.render('index', { code: stdout });
-    } catch (e) {
-        if (typeof e === 'string' && e === 'Time Limit Exceeded') {
-            res.render('index', { code: 'Time Limit Exceeded' });
+        res.render('index', { code: result });
+    } catch (e:any) {
+        // Handle errors and render error message
+        let errorMessage = '';
+        if (e instanceof Error) {
+            errorMessage = e.message;
         } else {
-           
-            console.error(e);
-            let errorMessage = '';
-            if (e instanceof TypeError) {
-                errorMessage = `TypeError: ${e.message}`;
-            } else if (e instanceof Error) {
-                errorMessage = e.message;
-            } else {
-                errorMessage = e+"";
-            }
-            res.render('index', { code: errorMessage });
+            errorMessage = e.toString();
         }
+        res.render('index', { code: errorMessage });
     }
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log('Working correctly');
 });

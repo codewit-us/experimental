@@ -29,9 +29,12 @@
                                 <% testCases.forEach(testCase => { %>
                                     <li>
                                         <%= testCase._attributes.name %> - <%= testCase._attributes.time %> seconds
-                                        <% if (testCase.failure) { %>
+                                        <% if (testCase.error || testCase.failure) { %>
+                                            <% const failureMessage = testCase.error ? testCase.error._attributes.message : testCase.failure._attributes.message; %>
                                             <div class="failure">
-                                                <p>Test failed: <%= testCase.failure._cdata.trim() %></p>
+                                                <p>Test failed: <%= failureMessage %></p>
+                                                <p>Details:</p>
+                                                <pre><%= testCase.error ? testCase.error._cdata.trim() : testCase.failure._cdata.trim() %></pre>
                                             </div>
                                         <% } else { %>
                                             <div class="success">
@@ -46,6 +49,7 @@
                 <% } else { %>
                     <p><%= code %></p>
                 <% } %>
+                
                 
                </div>
             </div>
