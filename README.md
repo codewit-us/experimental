@@ -4,7 +4,11 @@ Navigate to the `codeExecutor` directory, run the application, and build the Doc
 
 ```bash
 cd codeExecutor
+```
+```bash
 npm run dev
+```
+```bash
 docker build -t codewitus-python -f code_files/Dockerfile.python.box code_files/
 ```
 
@@ -12,7 +16,9 @@ docker build -t codewitus-python -f code_files/Dockerfile.python.box code_files/
 At present, the Docker image is not stored in a Docker registry. Therefore, depending on your Docker timeout configurations, you may need to log in and build the image for each session.
 
 ### Building image:
+```bash
 docker build  -t codewitus-python -f code_files/Dockerfile.python.box code_files/.
+```
 
 ### code that passes all test cases:
 
