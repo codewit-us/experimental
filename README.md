@@ -1,15 +1,12 @@
 # Experimental
 ## Getting Started
-Navigate to the `codeExecutor` directory, run the application, and build the Docker image:
+Navigate to the `codeExecutor` directory, run the application:
 
 ```bash
 cd codeExecutor
 ```
 ```bash
 npm run dev
-```
-```bash
-docker build -t codewitus-python -f code_files/Dockerfile.python.box code_files/
 ```
 
 ## Testing the application:
@@ -21,6 +18,7 @@ docker build  -t codewitus-python -f code_files/Dockerfile.python.box code_files
 ```
 
 ### code that passes all test cases:
+Copy and paste the following code inside the box and submit the code. 
 
 ```python
 class GradeBook:
