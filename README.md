@@ -1,4 +1,6 @@
 # Experimental
+This repository is dedicated to the development of experimental features, specifically focusing on creating a coding platform capable of executing user-submitted code and running test cases against it.
+
 ## Getting Started
 Navigate to the `codeExecutor` directory, run the application:
 
