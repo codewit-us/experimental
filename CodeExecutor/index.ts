@@ -86,6 +86,7 @@ app.post('/code', async (req: Request, res: Response) => {
                         // Both the correct output and compilation errors are available in stderr. Thus we check if output.xml is empty, If it is empty then it has to be a compilation error. 
                         const xmlData = await readAsync('code_files/test-reports/output.xml', 'utf-8');
                         if (!xmlData || xmlData.trim() === '') {
+                            console.log(stderr)
                             reject(new Error('Compilation failed: ' + stderr));
                             return;
                         }
@@ -104,9 +105,8 @@ app.post('/code', async (req: Request, res: Response) => {
         });
 
         // Docker command to run the code
-        const command = `docker run -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python`;
+        const command = `docker run --memory 300m --network none --security-opt=no-new-privileges -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python`;
         const result = await timeLimitedExec(command);
-
         // Render the output to the frontend
         res.render('index', { code: result });
     } catch (e:any) {
