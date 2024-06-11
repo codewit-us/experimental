@@ -19,7 +19,7 @@ At present, the Docker image is not stored in a Docker registry. Therefore, depe
 docker build  -t codewitus-python -f code_files/Dockerfile.python.box code_files/.
 ```
 
-### code that passes all test cases:
+### Code that passes all test cases:
 Copy and paste the following code inside the box and submit the code. 
 
 ```python
