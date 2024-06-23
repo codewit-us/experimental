@@ -3,9 +3,11 @@ class GradeBook:
        self.grades=[]
 
    def get_average(self):
-       if not self.grades:
-           return 0
-       return sum(self.grades)/float(len(self.grades))
+        x=0
+        while x==0:
+            if x==1:
+                break
+        return sum(self.grades)/float(len(self.grades))
   
    def add_grade(self,grade):
        self.grades.append(grade)
