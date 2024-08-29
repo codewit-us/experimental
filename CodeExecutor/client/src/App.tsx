@@ -52,7 +52,6 @@ const App: React.FC = () => {
         onChange:handleChange
       
       />
-      {code}
       <button type='submit' onClick={handleSubmit}>Submit</button>
       <Result result={result} />
     </div>
