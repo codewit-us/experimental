@@ -37,15 +37,17 @@ class GradeBook:
        self.grades.append(grade)
 ```
 ## Running Container Restrictions: 
-The subprocess launches the container Dockerfile.python.box where the user submitted code is being run. The container running time is limited to 4 seconds. This is achieved through the following line in the dockerfile:
-```CMD ["timeout", "4s", "python", "testfile.py"]```
-Memory usage for the container is capped at 300 MB, and security privileges are restricted. These constraints are implemented using the docker run command in index.ts:
-'''const command = `docker run --memory 300m --network none --security-opt=no-new-privileges -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python`;
+The subprocess launches the container Dockerfile.python.box where the user submitted code is being run. The container running time is limited to 4 seconds. This is achieved through the following line in the dockerfile:<br />
+```CMD ["timeout", "4s", "python", "testfile.py"]``` 
+Memory usage for the container is capped at 300 MB, and security privileges are restricted. These constraints are implemented using the docker run command in index.ts: <br />
+ ```typescript
+const command = `docker run --memory 300m --network none --security-opt=no-new-privileges -v "$(pwd)/code_files/code.py":/usr/src/code.py -v "$(pwd)/code_files/test-reports":/usr/src/test-reports codewitus-python`;
 ```
---memory 300m: Enforces a memory limit of 300 MB for the container.
---network none: Disables networking for the container, preventing external network access.
+<br/>
+--memory 300m: Enforces a memory limit of 300 MB for the container.<br/>
+--network none: Disables networking for the container, preventing external network access.<br/>
 --security-opt=no-new-privileges: Prevents any process within the container from gaining additional privileges beyond those it initially started with. This option enhances security by limiting the attack surface, especially when executing untrusted or potentially risky code.
-
+<br/>
 ## Contributing
 
 See the [contributing guide](https://github.com/codewit-us/codewit.us/blob/main/CONTRIBUTING.md).
