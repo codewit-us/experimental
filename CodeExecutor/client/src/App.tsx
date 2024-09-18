@@ -5,35 +5,35 @@ import CodeMirror from "@uiw/react-codemirror";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { python } from '@codemirror/lang-python';
 
-
-
-
 const App: React.FC = () => {
   const [result, setResult] = useState<string>('');
   const [code, setCode] = useState<string>('');
 
-  const handleSubmit = async (code: string) => {
+  const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:3003/', {
+      const response = await fetch('http://localhost:3003/code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ codeText: code }),
       });
+  
       const data = await response.json();
-      setResult(data);
+      setResult(JSON.stringify(data, null, 2));
     } catch (e) {
-      setResult('error');
+      setResult('Error executing code');
     }
   };
-  function handleChange(value:string):void {
-    setCode(value)
-  } 
+
+  const handleChange = (value: string) => {
+    setCode(value);
+  };
 
   return (
     <div className='App'>
-     <CodeMirror
+      <div className='CodeMirror'>
+      <CodeMirror
         value={code}
         height="400px"
         width='400px'
@@ -52,11 +52,12 @@ const App: React.FC = () => {
         onChange:handleChange
       
       />
-      <button type='submit' onClick={handleSubmit}>Submit</button>
-      <Result result={result} />
+        <button type='submit' className='submitBtn' onClick={handleSubmit}>Submit</button>
+      </div>
+      <div className='Result'>
+        <Result result={result} />
+      </div>
     </div>
-    
-
   );
 }
 
