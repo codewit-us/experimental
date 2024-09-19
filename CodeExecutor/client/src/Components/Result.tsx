@@ -5,6 +5,8 @@ interface TestCase {
     name: string;
     time: string;
     classname?: string;
+    timestamp?: string;
+    file?: string;
     line?: string;
   };
   error?: {
@@ -48,7 +50,22 @@ const Result: React.FC<ResultProps> = ({ result }) => {
   try {
     codeData = JSON.parse(result);
   } catch {
-    return <div>{result}</div>;
+    return (
+      <div className="result-container">
+        <div className="h2">Problem Statement</div>
+        <hr />
+        <div className="question">1. Consider already having a class called `gradebook` that manages a student's grades for a class, but you want to *define* the following member function for it:
+      double getAverage(); // returns the average of all the current grades
+      void addGrade(double grade); // adds a new grade into the gradebook
+      Complete the following function by: 
+       (1) creating a new gradebook
+       (2) adding the scores `80` and `95` to it, and 
+       (3) returning what `averageGrade` calculates.</div>
+        <div className="h2">Test case results</div>
+        <hr />
+        <div>No results to display.</div> {/* Placeholder for when no results are available */}
+      </div>
+    );
   }
 
   if (codeData.result && codeData.result.testsuites && codeData.result.testsuites.testsuite) {
@@ -58,36 +75,44 @@ const Result: React.FC<ResultProps> = ({ result }) => {
 
     return (
       <div className="result-container">
+        <div className="h2">Problem Statement</div>
+        <hr />
+        <div className="question">1. Consider already having a class called `gradebook` that manages a student's grades for a class, but you want to *define* the following member function for it:
+      double getAverage(); // returns the average of all the current grades
+      void addGrade(double grade); // adds a new grade into the gradebook
+      Complete the following function by: 
+       (1) creating a new gradebook
+       (2) adding the scores `80` and `95` to it, and 
+       (3) returning what `averageGrade` calculates.</div>
+        <div className="h2">Test case results</div>
+        <hr />
         {testSuites.map((suite, index) => (
           <div key={index}>
-            <div className="summary">
-              <h2>{suite._attributes.name}</h2>
-              <p>Tests: {suite._attributes.tests}</p>
-              <p>Time: {suite._attributes.time} seconds</p>
-              <p>Failures: {suite._attributes.failures}</p>
-              <p>Errors: {suite._attributes.errors}</p>
-              <p>Skipped: {suite._attributes.skipped}</p>
-            </div>
+            <h2>{suite._attributes.name}</h2>
+            <p>Tests: {suite._attributes.tests}</p>
+            <p>File: {suite._attributes.file}</p>
+            <p>Time: {suite._attributes.time} seconds</p>
+            <p>Timestamp: {suite._attributes.timestamp}</p>
+            <p>Failures: {suite._attributes.failures}</p>
+            <p>Errors: {suite._attributes.errors}</p>
+            <p>Skipped: {suite._attributes.skipped}</p>
             <ul className="test-case-list">
-              {(Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase]).map((testCase, idx) => {
-                const hasError = testCase.error;
-                const hasFailure = testCase.failure;
-                const statusClass = hasError || hasFailure ? 'failed' : 'passed';
-                return (
-                  <li key={idx} className={`test-case ${statusClass}`}>
-                    <strong>{testCase._attributes.name}</strong> - {testCase._attributes.time} seconds
-                    {hasError || hasFailure ? (
-                      <div className="error-details">
-                        <p>{hasError ? 'Test failed: ' + testCase.error._attributes.message : 'Test failed: ' + testCase.failure._attributes.message}</p>
-                        <p>Details:</p>
-                        <pre>{hasError ? testCase.error._cdata?.trim() : testCase.failure._cdata?.trim()}</pre>
-                      </div>
-                    ) : (
-                      <p className="success-message">Test passed successfully.</p>
-                    )}
-                  </li>
-                );
-              })}
+              {(Array.isArray(suite.testcase) ? suite.testcase : [suite.testcase]).map((testCase, idx) => (
+                <li key={idx} className={`test-case ${testCase.error || testCase.failure ? 'failed' : 'passed'}`}>
+                  <strong>{testCase._attributes.name}</strong> - {testCase._attributes.time} seconds
+                  {testCase.error || testCase.failure ? (
+                    <div className="failure">
+                      <p>Test failed: {testCase.error ? testCase.error._attributes.message : testCase.failure._attributes.message}</p>
+                      <p>Details:</p>
+                      <pre>{testCase.error ? testCase.error._cdata?.trim() : testCase.failure._cdata?.trim()}</pre>
+                    </div>
+                  ) : (
+                    <div className="success-message">
+                      <p>Test passed successfully.</p>
+                    </div>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         ))}
@@ -95,7 +120,13 @@ const Result: React.FC<ResultProps> = ({ result }) => {
     );
   }
 
-  return <div>{result}</div>;
+  return (
+    <div className="result-container">
+      <div className="h2">Test case results</div>
+      <hr />
+      <div>No valid result data available.</div> {/* When there's an invalid result format */}
+    </div>
+  );
 };
 
 export default Result;

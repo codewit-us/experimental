@@ -1,42 +1,93 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  padding: 10px;
   text-align: center;
-  
+  min-width: 1280px;
+  max-width: 1280px;
 }
+
 .App {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  align-items: center;
+}
+
+.h1 {
+  font-size: 26px;
+  font-weight: bold;
+  color:rgb(178, 9, 9)
+}
+
+.h2{
+  font-size:21px;
+  font-weight: bold;
+}
+
+.language-selector {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.language-selector label {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.language-selector select {
+  padding: 5px;
+  font-size: 16px;
+}
+
+.code-platform {
+  display: flex;
+  justify-content: space-between;
+  height: 100%; /* Ensures the boxes take the full height */
+  width:100%;
+  padding-bottom: 20px;
+}
+.cm-theme{
+  height: 100%;
+}
+
+.CodeMirror,
+.Result {
+  flex: 1;
+  height: 100%;
+  min-height: 400px; /* Ensures minimum height */
+  max-width: 50%; /* Both take up 50% of the width */
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  resize: horizontal; /* Enable horizontal resizing */
+  overflow: auto; /* To ensure content overflow is handled */
 }
 
 .CodeMirror {
   margin-right: 20px;
 }
-.submitBtn{
-  margin-top: 10px;
-}
 
 .Result {
-  flex: 1;
-  max-width: 500px;
-  overflow-y: auto; /* Add scroll if the content overflows */
+  border: 1px solid #ddd; /* To show a visible border */
+  min-width: 50%; /* Start with 50% width even if there's no result */
 }
 
+.submitBtn {
+  margin-top: 10px;
+}
 
 .result-container {
   padding: 20px;
 }
 
-.codeField{
+.codeField {
   display: flex;
   flex-direction: column;
   align-items: center;
-  align-self: left;
 }
 
 .summary {
@@ -48,7 +99,7 @@
 .test-case-list {
   list-style: none;
   padding: 0;
-  color:black;
+  color: black;
 }
 
 .test-case {
@@ -77,26 +128,3 @@
   color: green;
 }
 
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
