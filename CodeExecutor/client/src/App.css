@@ -1,8 +1,11 @@
+
 #root {
   padding: 10px;
   text-align: center;
   min-width: 1280px;
   max-width: 1280px;
+  margin: 0 auto; 
+
 }
 
 .App {
@@ -17,11 +20,11 @@
 .h1 {
   font-size: 26px;
   font-weight: bold;
-  color:rgb(178, 9, 9)
+  color: rgb(178, 9, 9);
 }
 
-.h2{
-  font-size:21px;
+.h2 {
+  font-size: 21px;
   font-weight: bold;
 }
 
@@ -45,11 +48,13 @@
 .code-platform {
   display: flex;
   justify-content: space-between;
-  height: 100%; /* Ensures the boxes take the full height */
-  width:100%;
+  height: 100%; /* Ensures the editor and result components take full height */
+  width: 100%;
   padding-bottom: 20px;
+  min-height: 400px; /* Ensures the minimum height of the editor/result sections */
 }
-.cm-theme{
+
+.cm-theme {
   height: 100%;
 }
 
@@ -58,22 +63,23 @@
   flex: 1;
   height: 100%;
   min-height: 400px; /* Ensures minimum height */
-  max-width: 50%; /* Both take up 50% of the width */
+  width: 50%; /* Both take up 50% of the width */
   padding: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  resize: horizontal; /* Enable horizontal resizing */
-  overflow: auto; /* To ensure content overflow is handled */
+  resize: horizontal; /* Enables horizontal resizing */
+  overflow: auto; /* Ensures content overflow is handled */
 }
 
 .CodeMirror {
   margin-right: 20px;
+  max-width: 50%; /* Ensures CodeMirror takes up half the space */
 }
 
 .Result {
-  border: 1px solid #ddd; /* To show a visible border */
-  min-width: 50%; /* Start with 50% width even if there's no result */
+  border: 1px solid #ddd;
+  min-width: 50%; /* Ensures the Result takes up half the space */
 }
 
 .submitBtn {
@@ -127,4 +133,6 @@
 .success-message {
   color: green;
 }
-
+.error-message{
+  color:red;
+}
