@@ -1,0 +1,138 @@
+
+#root {
+  padding: 10px;
+  text-align: center;
+  min-width: 1280px;
+  max-width: 1280px;
+  margin: 0 auto; 
+
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.h1 {
+  font-size: 26px;
+  font-weight: bold;
+  color: rgb(178, 9, 9);
+}
+
+.h2 {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.language-selector {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.language-selector label {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.language-selector select {
+  padding: 5px;
+  font-size: 16px;
+}
+
+.code-platform {
+  display: flex;
+  justify-content: space-between;
+  height: 100%; /* Ensures the editor and result components take full height */
+  width: 100%;
+  padding-bottom: 20px;
+  min-height: 400px; /* Ensures the minimum height of the editor/result sections */
+}
+
+.cm-theme {
+  height: 100%;
+}
+
+.CodeMirror,
+.Result {
+  flex: 1;
+  height: 100%;
+  min-height: 400px; /* Ensures minimum height */
+  width: 50%; /* Both take up 50% of the width */
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  resize: horizontal; /* Enables horizontal resizing */
+  overflow: auto; /* Ensures content overflow is handled */
+}
+
+.CodeMirror {
+  margin-right: 20px;
+  max-width: 50%; /* Ensures CodeMirror takes up half the space */
+}
+
+.Result {
+  border: 1px solid #ddd;
+  min-width: 50%; /* Ensures the Result takes up half the space */
+}
+
+.submitBtn {
+  margin-top: 10px;
+}
+
+.result-container {
+  padding: 20px;
+}
+
+.codeField {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary {
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.test-case-list {
+  list-style: none;
+  padding: 0;
+  color: black;
+}
+
+.test-case {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.test-case.failed {
+  border-color: red;
+  background-color: #fdd;
+}
+
+.test-case.passed {
+  border-color: green;
+  background-color: rgb(246, 250, 246);
+}
+
+.error-details {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.success-message {
+  color: green;
+}
+.error-message{
+  color:red;
+}
