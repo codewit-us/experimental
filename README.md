@@ -7,17 +7,29 @@ Navigate to the `codeExecutor` directory, run the application:
 ```bash
 cd codeExecutor
 ```
-```bash
-npm run dev
-```
-
-## Testing the application:
-At present, the Docker image is not stored in a Docker registry. Therefore, depending on your Docker timeout configurations, you may need to log in and build the image for each session.
-
 ### Building image:
 ```bash
 docker build  -t codewitus-python -f code_files/Dockerfile.python.box code_files/.
 ```
+### Running the backend :
+```bash
+npm install
+```
+```bash
+npm run dev
+```
+### Running the frontend:
+```bash
+cd client
+```
+```bash
+npm install
+```
+```bash
+npm run dev
+```
+## Testing the application:
+At present, the Docker image is not stored in a Docker registry. Therefore, depending on your Docker timeout configurations, you may need to log in and build the image for each session.
 
 
 ### Code that passes all test cases:
