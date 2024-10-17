@@ -2,7 +2,7 @@
 This repository is dedicated to the development of experimental features, specifically focusing on creating a coding platform capable of executing user-submitted code and running test cases against it.
 
 ## Getting Started
-Navigate to the `codeExecutor` directory, run the application:
+Navigate to the `codeExecutor` directory:
 
 ```bash
 cd codeExecutor
@@ -29,8 +29,6 @@ npm install
 npm run dev
 ```
 ## Testing the application:
-At present, the Docker image is not stored in a Docker registry. Therefore, depending on your Docker timeout configurations, you may need to log in and build the image for each session.
-
 
 ### Code that passes all test cases:
 Copy and paste the following code inside the box and submit the code. 
@@ -48,7 +46,7 @@ class GradeBook:
    def add_grade(self,grade):
        self.grades.append(grade)
 ```
-## Running Container Restrictions: 
+## Running container restrictions: 
 The subprocess launches the container Dockerfile.python.box where the user submitted code is being run. The container running time is limited to 4 seconds. This is achieved through the following line in the dockerfile:<br />
 
 ```CMD ["timeout", "4s", "python", "testfile.py"]``` 
